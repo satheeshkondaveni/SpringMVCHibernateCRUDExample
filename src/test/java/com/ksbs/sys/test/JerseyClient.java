@@ -12,7 +12,7 @@ import com.ksbs.sys.model.Student;
 public class JerseyClient {
 	public void getAllStudentDetails() {
 		Client client = ClientBuilder.newClient();
-		WebTarget base = client.target("http://localhost:8585/jersey-spring-jpa/rest/student");
+		WebTarget base = client.target("http://localhost:2222/jersey-spring-jpa/rest/student");
 		WebTarget details = base.path("getAllStudents");
 		Response response = details.request(MediaType.APPLICATION_JSON).get();
 		
@@ -33,7 +33,7 @@ public class JerseyClient {
 	}
 	public void getStudent(int studentId) {
 		Client client = ClientBuilder.newClient();
-		WebTarget base = client.target("http://localhost:8585/jersey-spring-jpa/rest/student");
+		WebTarget base = client.target("http://localhost:2222/jersey-spring-jpa/rest/student");
 		WebTarget studentById = base.path("student-info/{studentId}").resolveTemplate("studentId", studentId);
 		String student = studentById.request(MediaType.APPLICATION_JSON).get(String.class);		
 		System.out.println(" getStudent ==> "+student.toString());
@@ -41,33 +41,32 @@ public class JerseyClient {
 	}
 	public void createStudent(Student student) {
 		Client client = ClientBuilder.newClient();
-		WebTarget base = client.target("http://localhost:8585/jersey-spring-jpa/rest/student");
+		WebTarget base = client.target("http://localhost:2222/jersey-spring-jpa/rest/student");
 		WebTarget add = base.path("create-student");
 		Response response = add.request(MediaType.APPLICATION_JSON)	.post(Entity.json(student));
 		
 		System.out.println("Response Http Status: "+ response.getStatus());
 		String std = response.readEntity(String.class);
-		System.out.println(" getAllStudentDetails ==> "+std.toString());
-        System.out.println(response.getLocation());
+		System.out.println(" createStudent ==> "+std.toString());
+     
         
 	    client.close();
 	}
 	public void updateStudent(Student student) {
 		Client client = ClientBuilder.newClient();
-		WebTarget base = client.target("http://localhost:8585/jersey-spring-jpa/rest/student");
+		WebTarget base = client.target("http://localhost:2222/jersey-spring-jpa/rest/student");
 		WebTarget update = base.path("updateStudent");
-		Response response = update.request(MediaType.APPLICATION_JSON)
-				.put(Entity.json(student));
+		Response response = update.request(MediaType.APPLICATION_JSON).put(Entity.json(student));
 		
 		System.out.println("Response Http Status: "+ response.getStatus());
-		Student resStudent = response.readEntity(Student.class);
-		System.out.println(resStudent.getRoll_no()+", "+ resStudent.getStudentName()+", "+ resStudent.getBranch()+", "+resStudent.getMarks());
+		String resStudent = response.readEntity(String.class);
+		System.out.println(" updateStudent : "+resStudent.toString());
         
 	    client.close();
 	}
 	public void deleteStudent(int studentId) {
 		Client client = ClientBuilder.newClient();
-		WebTarget base = client.target("http://localhost:8585/jersey-spring-jpa/rest/student");
+		WebTarget base = client.target("http://localhost:2222/jersey-spring-jpa/rest/student");
 		WebTarget deleteById = base.path("deleteStudent/{studentId}").resolveTemplate("studentId", studentId);
 		Response response = deleteById.request(MediaType.APPLICATION_JSON).delete();
 		
@@ -82,17 +81,17 @@ public class JerseyClient {
 		JerseyClient jerseyClient = new JerseyClient();
 	    
 		Student student = new Student();
-		student.setStudentName("Test 12 Client");
-		student.setBranch("Test 12 branch Client");
-		student.setMarks(90);
+		student.setStudentName("Test 16 Client");
+		student.setBranch("Test 16 branch Client");
+		student.setMarks(87);
 		
 		jerseyClient.getAllStudentDetails();
-		jerseyClient.getStudent(10);
+		jerseyClient.getStudent(5);
 		
 		jerseyClient.createStudent(student);		
-		student.setRoll_no(12);
+		student.setRoll_no(5);
 		jerseyClient.updateStudent(student);
 		
-		jerseyClient.deleteStudent(12);
+		jerseyClient.deleteStudent(6);
 	}
 }
