@@ -1,0 +1,300 @@
+package com.om.vlg.test;
+
+import java.util.Arrays;
+
+import java.util.List;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.filter.LoggingFilter;
+import org.glassfish.jersey.jackson.JacksonFeature;
+
+import com.om.vlg.dao.VlgDao;
+import com.om.vlg.dao.VlgDaoImpl;
+import com.om.vlg.entity.Employee;
+import com.om.vlg.entity.Employees;
+
+public class Test {
+	public  VlgDao vlgDao=VlgDaoImpl.getVlgDaoImpl();
+	Employees employees =null;
+	public static void main(String[] args) {
+	/*	// TODO Auto-generated method stub
+		Client client = ClientBuilder.newClient();
+	      WebTarget target =
+	              client.target("http://localhost:2222/RestExample/service/application.wadl" );
+	      Response response = target.request()
+	                                .get();
+	      System.out.printf("status: %s%n", response.getStatus());
+
+	      MultivaluedMap<String, Object> headers = response.getHeaders();
+	      System.out.println("-- response headers --");
+	      headers.entrySet().forEach(e-> System.out.printf("%s: %s%n", e.getKey(), e.getValue()));
+	      System.out.printf("-- response body --%n%s%n", response.readEntity(String.class));*/
+		
+		/*Test test =new Test();
+		test.callAllMethods();*/
+		
+		httpGETCollectionExample();
+		getEmployeeById();
+		addNewEmployee();
+		updateEmployeeById();
+		deleteEmployeeById();
+		addNewEmployeePram();
+		//https://howtodoinjava.com/jersey/jersey-restful-client-examples/
+		
+	}
+	
+	
+	private  void callAllMethods(){
+		 employees =vlgDao.getAllEmployees();
+		 List<Employee> listOfEmployees = employees.getEmployeeList();
+	        System.out.println("listOfEmployees : "+Arrays.toString( listOfEmployees.toArray(new Employee[listOfEmployees.size()]) ));
+	    
+		 employees =vlgDao.getEmployeeById(3);
+		 List<Employee> listOfEmployees2 = employees.getEmployeeList();
+	        System.out.println("getEmployeeById : "+Arrays.toString( listOfEmployees2.toArray(new Employee[listOfEmployees2.size()]) ));
+	    
+		 employees =vlgDao.addNewEmployee(new Employee(4,"Sri Krishna"));
+		 List<Employee> listOfEmployees3 = employees.getEmployeeList();
+	        System.out.println("addNewEmployee : "+Arrays.toString( listOfEmployees3.toArray(new Employee[listOfEmployees3.size()]) ));
+	    
+		 employees =vlgDao.updateEmployeeById(2,new Employee(2,"Krishna"));
+		 List<Employee> listOfEmployees4 = employees.getEmployeeList();
+	        System.out.println("updateEmployeeById : "+Arrays.toString( listOfEmployees4.toArray(new Employee[listOfEmployees4.size()]) ));
+	    
+		 employees =vlgDao.deleteEmployeeById(1);
+		 List<Employee> listOfEmployees5 = employees.getEmployeeList();
+	        System.out.println("deleteEmployeeById : "+Arrays.toString( listOfEmployees5.toArray(new Employee[listOfEmployees5.size()]) ));
+	    
+		 
+	}
+	 
+	private static void httpGETCollectionExample()
+	{
+	    ClientConfig clientConfig = new ClientConfig();
+	 
+	    HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("howtodoinjava", "password");
+	    clientConfig.register( feature) ;
+	 
+	    clientConfig.register(JacksonFeature.class);
+	 
+	    Client client = ClientBuilder.newClient( clientConfig );
+	    WebTarget webTarget = client.target("http://localhost:2222/RestExample/service").path("userActivities");
+	     
+	    Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+	    Response response = invocationBuilder.get();
+	     
+	    System.out.println(response.getStatus());
+	    System.out.println(response.getStatusInfo());
+	     
+	    if(response.getStatus() == 200)
+	    {
+	        Employees employees = response.readEntity(Employees.class);
+	        List<Employee> listOfEmployees = employees.getEmployeeList();
+	        System.out.println(Arrays.toString( listOfEmployees.toArray(new Employee[listOfEmployees.size()]) ));
+	    }
+	    
+	    
+	    
+	}
+	private static void getEmployeeById()
+	{
+		System.out.println("getEmployeeById ====> ");
+	    ClientConfig clientConfig = new ClientConfig();
+	 
+	    HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("Sri Krishna", "password");
+	    clientConfig.register( feature) ;
+	 
+	    clientConfig.register(JacksonFeature.class);
+	 
+	    Client client = ClientBuilder.newClient( clientConfig );
+	    WebTarget webTarget = client.target("http://localhost:2222/RestExample/service").path("userActivities").path("getEmployeeById/{id}").resolveTemplate("id", 2);
+	     //.queryParam("verbose", true);
+	    Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+	    Response response = invocationBuilder.get();
+	     
+	    System.out.println(response.getStatus());
+	    System.out.println(response.getStatusInfo());
+	     
+	    if(response.getStatus() == 200)
+	    {
+	        Employees employees = response.readEntity(Employees.class);
+	        List<Employee> listOfEmployees = employees.getEmployeeList();
+	        System.out.println(Arrays.toString( listOfEmployees.toArray(new Employee[listOfEmployees.size()]) ));
+	    }
+	    
+	    
+	    
+	}
+	private static void addNewEmployeePram()
+	{
+		System.out.println("addNewEmployeePram ====> ");
+	    ClientConfig clientConfig = new ClientConfig();
+	 
+	    HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("Krishna", "password");
+	    clientConfig.register( feature) ; 
+	    clientConfig.register(JacksonFeature.class);
+	    clientConfig.register( LoggingFilter.class );
+	 
+	    Client client = ClientBuilder.newClient( clientConfig );
+	    WebTarget webTarget = client.target("http://localhost:2222/RestExample/service").path("userActivities").path("addNewEmployeePram/{id}/{name}")
+	    		.resolveTemplate("id", 5).resolveTemplate("name", "Om Aksharayanamha:");
+	     //.queryParam("verbose", true);
+	    Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+	    Response response = invocationBuilder.post(Entity.entity(null, MediaType.APPLICATION_JSON));;
+	     
+	    System.out.println(response.getStatus());
+	    System.out.println(response.getStatusInfo());
+	     
+	    if(response.getStatus() == 200)
+	    {
+	        Employees employees = response.readEntity(Employees.class);
+	        List<Employee> listOfEmployees = employees.getEmployeeList();
+	        System.out.println(Arrays.toString( listOfEmployees.toArray(new Employee[listOfEmployees.size()]) ));
+	    }
+	    
+	    
+	    
+	}
+
+	private static void addNewEmployee()
+	{
+		System.out.println("addNewEmployee(); ====> ");
+	    ClientConfig clientConfig = new ClientConfig();
+	 
+	    HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("Lokesh Gupta", "password");
+	    clientConfig.register( feature) ; 
+	    clientConfig.register(JacksonFeature.class);
+	    clientConfig.register( LoggingFilter.class );
+	 
+	    Client client = ClientBuilder.newClient( clientConfig );
+	    WebTarget webTarget = client.target("http://localhost:2222/RestExample/service").path("userActivities").path("addNewEmployee/{id}")
+	    		.resolveTemplate("id", 2);
+	     //.queryParam("verbose", true);
+	    Employee emp=new Employee(4,"Sri Krishna");
+	    
+	    Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+	    Response response = invocationBuilder.post(Entity.entity(emp, MediaType.APPLICATION_JSON));;
+	     
+	    System.out.println(response.getStatus());
+	    System.out.println(response.getStatusInfo());
+	     
+	    if(response.getStatus() == 200)
+	    {
+	        Employees employees = response.readEntity(Employees.class);
+	        List<Employee> listOfEmployees = employees.getEmployeeList();
+	        System.out.println(Arrays.toString( listOfEmployees.toArray(new Employee[listOfEmployees.size()]) ));
+	    }
+	    
+	    
+	    
+	}
+	private static void updateEmployeeById()
+	{
+		System.out.println("updateEmployeeById(); ====> ");
+	    ClientConfig clientConfig = new ClientConfig();
+	 
+	    HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("David", "password");
+	    clientConfig.register( feature) ; 
+	    clientConfig.register(JacksonFeature.class);
+	    clientConfig.register( LoggingFilter.class );
+	 
+	    Client client = ClientBuilder.newClient( clientConfig );
+	    WebTarget webTarget = client.target("http://localhost:2222/RestExample/service").path("userActivities").path("updateEmployeeById/{id}")
+	    		.resolveTemplate("id", 2);
+	     //.queryParam("verbose", true);
+	    Employee emp=new Employee(2,"Sri Krishna");
+	    
+	    Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+	    Response response = invocationBuilder.put(Entity.entity(emp, MediaType.APPLICATION_JSON));;
+	     
+	    System.out.println(response.getStatus());
+	    System.out.println(response.getStatusInfo());
+	     
+	    if(response.getStatus() == 200)
+	    {
+	        Employees employees = response.readEntity(Employees.class);
+	        List<Employee> listOfEmployees = employees.getEmployeeList();
+	        System.out.println(Arrays.toString( listOfEmployees.toArray(new Employee[listOfEmployees.size()]) ));
+	    }
+	    
+	    
+	    
+	}
+	private static void deleteEmployeeById()
+	{
+		System.out.println("deleteEmployeeById ====> ");
+	    ClientConfig clientConfig = new ClientConfig();
+	 
+	    HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("Lokesh", "password");
+	    clientConfig.register( feature) ;
+	 
+	    clientConfig.register(JacksonFeature.class);
+	 
+	    Client client = ClientBuilder.newClient( clientConfig );
+	    WebTarget webTarget = client.target("http://localhost:2222/RestExample/service").path("userActivities").path("deleteEmployeeById/{id}").resolveTemplate("id", 1);
+	     //.queryParam("verbose", true);
+	    Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+	    Response response = invocationBuilder.delete();
+	     
+	    System.out.println(response.getStatus());
+	    System.out.println(response.getStatusInfo());
+	     
+	    if(response.getStatus() == 200)
+	    {
+	        Employees employees = response.readEntity(Employees.class);
+	        List<Employee> listOfEmployees = employees.getEmployeeList();
+	        System.out.println(Arrays.toString( listOfEmployees.toArray(new Employee[listOfEmployees.size()]) ));
+	    }
+	    
+	    
+	    
+	}
+}
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<version.jersey>2.19</version.jersey>
+
+ <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        <!-- do not use jettison, prefer jackson
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jettison</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-processing</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-sse</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+
+

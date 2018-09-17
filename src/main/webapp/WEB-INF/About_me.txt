@@ -1,0 +1,2 @@
+
+CREATE TABLE STUDENT(roll_no serial NOT NULL, studentName character varying(50) ,branch character varying(50) ,marks NUMERIC);
