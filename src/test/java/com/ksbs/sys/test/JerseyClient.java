@@ -1,5 +1,9 @@
 package com.ksbs.sys.test;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -7,6 +11,10 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONObject;
+
+import com.ksbs.rest.init.modal.StudentStatusModal;
 import com.ksbs.sys.model.Student;
 
 public class JerseyClient {
@@ -20,7 +28,34 @@ public class JerseyClient {
 		
 		String students = response.readEntity(String.class);
 		System.out.println(" getAllStudentDetails ==> "+students.toString());
+		  ObjectMapper mapper = new ObjectMapper();
+	        try {
+				StudentStatusModal std_model = mapper.readValue(students.toString(), StudentStatusModal.class);
+				   System.out.println("getStudentList : "+std_model.getStudentList());	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
+		
+		
+		
+		 HashMap<Object, Object> map = new HashMap<Object, Object>();
+		 JSONObject jObject = new JSONObject(students.toString());
+	        Iterator<?> keys = jObject.keys();
+
+	        while( keys.hasNext() ){
+	            Object key = keys.next();
+	            Object value = (Object) jObject.get(key.toString()); 
+	            map.put(key.toString(), value);
+
+	        }
+
+	        System.out.println("json : "+jObject);
+	        System.out.println("map : "+map.get("studentList"));
+	      
+	      
+	       
 		/* List<Student> listOfEmployees = employees.getStudentList();
 	     System.out.println(Arrays.toString( listOfEmployees.toArray(new Student[listOfEmployees.size()]) ));*/
 		
@@ -29,6 +64,8 @@ public class JerseyClient {
 		
 	   /* list.forEach(student ->  System.out.println(student.getRoll_no()+", "+ student.getStudentName()+", "+ student.getBranch()+", "+student.getMarks());
 	    */
+		
+		
 	    client.close();
 	}
 	public void getStudent(int studentId) {
@@ -37,6 +74,16 @@ public class JerseyClient {
 		WebTarget studentById = base.path("student-info/{studentId}").resolveTemplate("studentId", studentId);
 		String student = studentById.request(MediaType.APPLICATION_JSON).get(String.class);		
 		System.out.println(" getStudent ==> "+student.toString());
+		  ObjectMapper mapper = new ObjectMapper();
+	        try {
+				StudentStatusModal std_model = mapper.readValue(student.toString(), StudentStatusModal.class);
+				   System.out.println("getStudent List==> : "+std_model.getStudent());	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		
 	    client.close();
 	}
 	public void createStudent(Student student) {
@@ -48,7 +95,14 @@ public class JerseyClient {
 		System.out.println("Response Http Status: "+ response.getStatus());
 		String std = response.readEntity(String.class);
 		System.out.println(" createStudent ==> "+std.toString());
-     
+		  ObjectMapper mapper = new ObjectMapper();
+	        try {
+				StudentStatusModal std_model = mapper.readValue(std.toString(), StudentStatusModal.class);
+				   System.out.println("getStudent List==> : "+std_model.getStudent());	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         
 	    client.close();
 	}
@@ -71,9 +125,8 @@ public class JerseyClient {
 		Response response = deleteById.request(MediaType.APPLICATION_JSON).delete();
 		
 		System.out.println("Response Http Status: "+ response.getStatus());
-		if(response.getStatus() == 204) {
-			System.out.println("Data deleted successfully.");
-		}
+		String resStudent = response.readEntity(String.class);
+		System.out.println(" deleteStudent : "+resStudent.toString());
         
 	    client.close();
 	}	
@@ -81,17 +134,17 @@ public class JerseyClient {
 		JerseyClient jerseyClient = new JerseyClient();
 	    
 		Student student = new Student();
-		student.setStudentName("Test 16 Client");
-		student.setBranch("Test 16 branch Client");
-		student.setMarks(87);
+		student.setStudentName("Test 17 Client");
+		student.setBranch("Test 17 branch Client");
+		student.setMarks(67);
 		
 		jerseyClient.getAllStudentDetails();
 		jerseyClient.getStudent(5);
 		
 		jerseyClient.createStudent(student);		
-		student.setRoll_no(5);
-		jerseyClient.updateStudent(student);
+	//	student.setRoll_no(9);
+	//	jerseyClient.updateStudent(student);
 		
-		jerseyClient.deleteStudent(6);
+	//	jerseyClient.deleteStudent(6);
 	}
 }

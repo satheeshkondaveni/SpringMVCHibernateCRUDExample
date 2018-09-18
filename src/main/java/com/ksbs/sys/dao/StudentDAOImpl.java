@@ -26,9 +26,8 @@ public class StudentDAOImpl implements StudentDAOI {
 		System.out.println(" getAllStudents ===> ");
 		//List<Student> studentList = session.createQuery("from Student").list();
 		Criteria c = session.createCriteria(com.ksbs.sys.model.Student.class);
-		c.addOrder(Order.desc("marks"));
+		c.addOrder(Order.desc("marks")).addOrder(Order.asc("roll_no"));
 		List<Student> studentList= c.list();
-		
 		return studentList;
 	}
 	

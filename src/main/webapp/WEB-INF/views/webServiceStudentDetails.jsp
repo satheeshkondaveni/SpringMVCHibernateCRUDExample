@@ -23,7 +23,7 @@
 <div class="container-fluid">
  <div class="row">
     <div class="col-sm-12 col-md-12" >
-<form:form method="post" id="studentForm" modelAttribute="student" action="/SpringMVCHibernateCRUDExample/student/addStudent.do" class="form-horizontal">
+<form:form method="post" id="studentForm" modelAttribute="student" action="/SpringMVCHibernateCRUDExample/student/wsAddStudent.do" class="form-horizontal">
     <div class="form-group">
        <label style="text-align:center" class="col-sm-12 col-md-12 control-label ">Add Student</label>
       
@@ -86,15 +86,9 @@
 </div>
  <div class="row">
     <div class="col-sm-12 col-md-12"  align="center">
-    <c:if test="${empty listOfStudents}">
-    <h3 >Data Not Available</h3>
-   </c:if>
-
-<c:if test="${!empty listOfStudents}">
 <h3 >Student List</h3>
-<a href="<c:url value='/student/webServiceStudentDetails.do' />" > Web Services Student Details</a>
+<c:if test="${!empty listOfStudents}">
 	<table class="tg">
-
 	<tr>
 		<th width="80">Roll Number</th>
 		<th width="120">Student Name</th>
@@ -110,12 +104,14 @@
 			<td>${obj.branch}</td>
 			<td>${obj.marks}</td>
 			
-			<td><a href="<c:url value='/student/${obj.roll_no}/updateStudent.do' />" >Edit</a></td>
-			<td><a href="<c:url value='/student/${obj.roll_no}/deleteStudent.do' />" >Delete</a></td>
+			<td><a href="<c:url value='/student/${obj.roll_no}/wsUpdateStudent.do' />" >Edit</a></td>
+			<td><a href="<c:url value='/student/${obj.roll_no}/wsDeleteStudent.do' />" >Delete</a></td>
 		</tr>
 	</c:forEach>
 	</table>
 </c:if>
+<br/>
+<a href="<c:url value='/student/getAllStudents.do' />" class="btn btn-primary "  >Back</a>
 </div>
 </div>
 </div>
